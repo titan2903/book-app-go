@@ -2,13 +2,16 @@ package repository
 
 import (
 	"book-app/entity"
+	"book-app/transport"
+	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
 
 type RepositoryBook interface {
 	AddBook(book entity.Book) (entity.Book, error)
-	FindAll(userID int, genre string, limit, page int) ([]entity.Book, error)
+	FindAll(userID int, filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error)
 	FindByID(ID int) (entity.Book, error)
 	UpdateBook(book entity.Book) (entity.Book, error)
 	DeleteBook(ID int) (entity.Book, error)
@@ -31,33 +34,34 @@ func (r *repositoryBook) AddBook(book entity.Book) (entity.Book, error) {
 	return book, nil
 }
 
-func (r *repositoryBook) FindAll(userID int, genre string, limit, page int) ([]entity.Book, error) {
+func (r *repositoryBook) FindAll(userID int, filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error) {
 	var books []entity.Book
+
+	var count int64
 
 	offset := (page - 1) * limit
 
+	query := r.db.Table("books").Count(&count)
+
 	if userID != 0 {
-		err := r.db.Limit(limit).Offset(offset).Where("user_id = ?", userID).Find(&books).Error
-		if err != nil {
-			return books, err
-		}
+		query = query.Where("user_id = ?", userID)
+	} 
 
-		return books, nil
-	} else if genre != "" {
-		err := r.db.Limit(limit).Offset(offset).Where("genre LIKE ?", "%"+genre+"%").Find(&books).Error
-		if err != nil {
-			return books, err
-		}
+	fmt.Println(filterBook.Genre)
 
-		return books, nil
-	} else {
-		err := r.db.Limit(limit).Offset(offset).Find(&books).Error
-		if err != nil {
-			return books, err
-		}
+	if filterBook.Genre != "" {
+		query = query.Where("genre LIKE ?", "%"+filterBook.Genre+"%")
 	}
 
-	return books, nil
+	query = query.Count(&count).Find(&books)
+	
+	query = query.Limit(limit).Offset(offset).Find(&books)
+
+	if query.Error != nil {
+		return nil, 0, errors.New("Error Get Books from Database")
+	}
+
+	return books, count, nil
 }
 
 func (r *repositoryBook) FindByID(ID int) (entity.Book, error) {

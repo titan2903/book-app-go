@@ -45,9 +45,8 @@ type InputDetailIdBook struct {
 	User entity.User
 }
 
-type GetListBookInput struct {
-	Page     uint   `query:"page"`
-	Limit    uint   `query:"limit"`
-	UserID int `query:"user_id"`
+type FilterBook struct {
+	StartDate int `query:"start_date"`
+	EndDate int `query:"end_date"`
 	Genre string `query:"genre"`
 }

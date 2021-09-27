@@ -71,22 +71,28 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 }
 
 func(h *bookHandler) GetBooks(c *gin.Context) {
-	userID, _ := strconv.Atoi(c.Query("user_id"))
 	genre := c.Query("genre")
+	userID, _ := strconv.Atoi(c.Query("user_id"))
 	limitQuery := c.DefaultQuery("limit", config.DefaultLimit)
 	pageQuery := c.DefaultQuery("page", config.DefaultPage)
 
 	limit, _ := strconv.Atoi(limitQuery)
 	page, _ := strconv.Atoi(pageQuery)
+	
+	filterBook := transport.FilterBook{}
+	filterBook.Genre = genre
 
-	books, err := h.service.GetBooks(userID, genre, limit, page)
+
+	books, count, err := h.service.GetBooks(userID, filterBook, limit, page)
 	if err != nil {
 		response := transport.ApiResponse("Error to get books", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := transport.ApiResponse("List of books", http.StatusOK, "success", formatter.FormatBooks(books))
+	fmt.Println(count)
+
+	response := transport.ApiResponseGetListBook("List of books", http.StatusOK, "success", formatter.FormatBooks(books), count)
 	
 	c.JSON(http.StatusOK, response)
 }

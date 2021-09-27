@@ -13,6 +13,16 @@ type Meta struct {
 	Status  string `json:"status"`
 }
 
+type Count struct {
+	Count int64 `json:"count"`
+}
+
+type ResponseBookList struct {
+	Meta Meta        `json:"meta"`
+	Count Count `json:"count"`
+	Data interface{} `json:"data"` //! flexibel data
+}
+
 func ApiResponse(message string, code int, status string, data interface{}) Response {
 	meta := Meta{
 		Message: message,
@@ -22,6 +32,26 @@ func ApiResponse(message string, code int, status string, data interface{}) Resp
 
 	jsonResponse := Response{
 		Meta: meta,
+		Data: data,
+	}
+
+	return jsonResponse
+}
+
+func ApiResponseGetListBook(message string, code int, status string, data interface{}, books int64) ResponseBookList {
+	meta := Meta{
+		Message: message,
+		Code:    code,
+		Status:  status,
+	}
+
+	count := Count{
+		Count: books,
+	}
+
+	jsonResponse := ResponseBookList{
+		Meta: meta,
+		Count: count,
 		Data: data,
 	}
 
