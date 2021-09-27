@@ -76,7 +76,10 @@ func(h *bookHandler) GetBooks(c *gin.Context) {
 	limitQuery := c.DefaultQuery("limit", config.DefaultLimit)
 	pageQuery := c.DefaultQuery("page", config.DefaultPage)
 
-	books, err := h.service.GetBooks(userID, genre)
+	limit, _ := strconv.Atoi(limitQuery)
+	page, _ := strconv.Atoi(pageQuery)
+
+	books, err := h.service.GetBooks(userID, genre, limit, page)
 	if err != nil {
 		response := transport.ApiResponse("Error to get books", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)

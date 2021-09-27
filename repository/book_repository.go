@@ -8,7 +8,7 @@ import (
 
 type RepositoryBook interface {
 	AddBook(book entity.Book) (entity.Book, error)
-	FindAll(userID int, genre string) ([]entity.Book, error)
+	FindAll(userID int, genre string, limit, page int) ([]entity.Book, error)
 	FindByID(ID int) (entity.Book, error)
 	UpdateBook(book entity.Book) (entity.Book, error)
 	DeleteBook(ID int) (entity.Book, error)
@@ -31,41 +31,33 @@ func (r *repositoryBook) AddBook(book entity.Book) (entity.Book, error) {
 	return book, nil
 }
 
-func (r *repositoryBook) FindAll(userID int, genre string) ([]entity.Book, error) {
+func (r *repositoryBook) FindAll(userID int, genre string, limit, page int) ([]entity.Book, error) {
 	var books []entity.Book
 
+	offset := (page - 1) * limit
+
 	if userID != 0 {
-		err := r.db.Where("user_id = ?", userID).Find(&books).Error
+		err := r.db.Limit(limit).Offset(offset).Where("user_id = ?", userID).Find(&books).Error
 		if err != nil {
 			return books, err
 		}
 
 		return books, nil
 	} else if genre != "" {
-		err := r.db.Where("genre = ?", genre).Find(&books).Error
+		err := r.db.Limit(limit).Offset(offset).Where("genre = ?", genre).Find(&books).Error
 		if err != nil {
 			return books, err
 		}
 
 		return books, nil
 	} else {
-		err := r.db.Find(&books).Error
+		err := r.db.Limit(limit).Offset(offset).Find(&books).Error
 		if err != nil {
 			return books, err
 		}
 	}
 
-	
-
 	return books, nil
-}
-
-func (r *repositoryBook) FindByUserID(userID int) ([]entity.Book, error) {
-	var book []entity.Book
-
-	
-
-	return book, nil
 }
 
 func (r *repositoryBook) FindByID(ID int) (entity.Book, error) {

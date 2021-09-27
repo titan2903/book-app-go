@@ -44,3 +44,10 @@ type InputDetailIdBook struct {
 	ID int `uri:"id" binding:"required"`
 	User entity.User
 }
+
+type GetListBookInput struct {
+	Page     uint   `query:"page"`
+	Limit    uint   `query:"limit"`
+	UserID int `query:"user_id"`
+	Genre string `query:"genre"`
+}
