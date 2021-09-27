@@ -44,7 +44,7 @@ func (r *repositoryBook) FindAll(userID int, genre string, limit, page int) ([]e
 
 		return books, nil
 	} else if genre != "" {
-		err := r.db.Limit(limit).Offset(offset).Where("genre = ?", genre).Find(&books).Error
+		err := r.db.Limit(limit).Offset(offset).Where("genre LIKE ?", "%"+genre+"%").Find(&books).Error
 		if err != nil {
 			return books, err
 		}
