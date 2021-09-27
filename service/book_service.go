@@ -30,8 +30,6 @@ func(s *serviceBook) AddBook(input transport.InputDataBook) (entity.Book, error)
 	book.Release = input.Release
 	book.UserID = input.User.ID
 
-	//! Proses pembuatan slug secara otomatis
-
 	newBook, err := s.repository.AddBook(book)
 	if err != nil {
 		return newBook, err
