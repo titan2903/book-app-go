@@ -4,7 +4,6 @@ import (
 	"book-app/entity"
 	"book-app/transport"
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -45,12 +44,14 @@ func (r *repositoryBook) FindAll(userID int, filterBook transport.FilterBook, li
 
 	if userID != 0 {
 		query = query.Where("user_id = ?", userID)
-	} 
-
-	fmt.Println(filterBook.Genre)
+	}
 
 	if filterBook.Genre != "" {
 		query = query.Where("genre LIKE ?", "%"+filterBook.Genre+"%")
+	}
+
+	if filterBook.StartYear != 0 && filterBook.EndYear != 0 {
+		query = query
 	}
 
 	query = query.Count(&count).Find(&books)

@@ -72,6 +72,8 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 
 func(h *bookHandler) GetBooks(c *gin.Context) {
 	genre := c.Query("genre")
+	startYear, _ := strconv.Atoi(c.Query("start_year"))
+	endYear, _ := strconv.Atoi(c.Query("end_year"))
 	userID, _ := strconv.Atoi(c.Query("user_id"))
 	limitQuery := c.DefaultQuery("limit", config.DefaultLimit)
 	pageQuery := c.DefaultQuery("page", config.DefaultPage)
@@ -81,7 +83,8 @@ func(h *bookHandler) GetBooks(c *gin.Context) {
 	
 	filterBook := transport.FilterBook{}
 	filterBook.Genre = genre
-
+	filterBook.StartYear = startYear
+	filterBook.EndYear = endYear
 
 	books, count, err := h.service.GetBooks(userID, filterBook, limit, page)
 	if err != nil {
@@ -107,7 +110,7 @@ func(h *bookHandler) UpdateBook(c *gin.Context) {
 		return;
 	}
 
-	var inputData transport.InputDataBook
+	var inputData transport.InputDataBookUpdate
 	err = c.ShouldBindJSON(&inputData)
 	if err != nil {
 		errors := transport.FormatValidationError(err)

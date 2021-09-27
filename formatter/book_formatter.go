@@ -8,6 +8,7 @@ type BookFormatter struct {
 	Name string `json:"name"`
 	Genre string `json:"genre"`
 	Release int64 `json:"release"`
+	IsRead bool `json:"is_read"`
 }
 
 func FormatBook(book entity.Book) BookFormatter {
@@ -17,6 +18,7 @@ func FormatBook(book entity.Book) BookFormatter {
 		Name:             	book.Name,
 		Genre: 				book.Genre,
 		Release:       		book.Release,
+		IsRead: 			book.IsRead,
 	}
 
 	return formatter

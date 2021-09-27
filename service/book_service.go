@@ -11,7 +11,7 @@ type ServiceBook interface {
 	AddBook(input transport.InputDataBook) (entity.Book, error)
 	GetBooks(UserID int, filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error)
 	FindByID(input int) (entity.Book, error)
-	UpdateBook(inputID transport.InputDetailIdBook, inputData transport.InputDataBook) (entity.Book, error)
+	UpdateBook(inputID transport.InputDetailIdBook, inputData transport.InputDataBookUpdate) (entity.Book, error)
 	DeleteBook(inputID transport.InputDetailIdBook, inputData transport.InputDetailIdBook) (entity.Book, error)
 }
 
@@ -29,6 +29,7 @@ func(s *serviceBook) AddBook(input transport.InputDataBook) (entity.Book, error)
 	book.Genre = input.Genre
 	book.Release = input.Release
 	book.UserID = input.User.ID
+	book.IsRead = false
 
 	newBook, err := s.repository.AddBook(book)
 	if err != nil {
@@ -58,7 +59,7 @@ func(s *serviceBook) FindByID(input int) (entity.Book, error) {
 	return book, nil
 }
 
-func(s *serviceBook) UpdateBook(inputID transport.InputDetailIdBook, inputData transport.InputDataBook) (entity.Book, error) {
+func(s *serviceBook) UpdateBook(inputID transport.InputDetailIdBook, inputData transport.InputDataBookUpdate) (entity.Book, error) {
 	book, err := s.repository.FindByID(inputID.ID)
 	if err != nil {
 		return book, err
@@ -68,9 +69,21 @@ func(s *serviceBook) UpdateBook(inputID transport.InputDetailIdBook, inputData t
 		return book, errors.New("not owner of book")
 	}
 
-	book.Name = inputData.Name
-	book.Genre = inputData.Genre
-	book.Release = inputData.Release
+	if inputData.Name != "" {
+		book.Name = inputData.Name
+	}
+
+	if inputData.Genre != "" {
+		book.Genre = inputData.Genre
+	}
+
+	if inputData.Release != 0 {
+		book.Release = inputData.Release
+	}
+
+	if inputData.IsRead || !inputData.IsRead {
+		book.IsRead = inputData.IsRead
+	}
 
 	updated, err := s.repository.UpdateBook(book)
 	if err != nil {

@@ -8,6 +8,7 @@ type Book struct {
 	Name 			string
 	Genre 			string
 	Release        	int64
+	IsRead			bool
 	CreatedAt      	time.Time
 	UpdatedAt	   	time.Time
 }

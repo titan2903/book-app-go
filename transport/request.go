@@ -40,13 +40,21 @@ type InputDataBook struct {
 	User entity.User
 }
 
+type InputDataBookUpdate struct {
+	Name string `json:"name"`
+	Genre string `json:"genre"`
+	Release int64 `json:"release"`
+	IsRead bool `json:"is_read"`
+	User entity.User
+}
+
 type InputDetailIdBook struct {
 	ID int `uri:"id" binding:"required"`
 	User entity.User
 }
 
 type FilterBook struct {
-	StartDate int `query:"start_date"`
-	EndDate int `query:"end_date"`
+	StartYear int `query:"start_year"`
+	EndYear int `query:"end_year"`
 	Genre string `query:"genre"`
 }

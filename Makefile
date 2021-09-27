@@ -9,9 +9,3 @@ migration-force:
 
 create-migration:
 	migrate create -ext sql -dir migration $(action)
-
-.PHONY
-	create-migration
-	migration-up
-	migration-down
-	migration-force
