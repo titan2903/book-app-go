@@ -26,7 +26,7 @@ $ migrate create -ext sql -dir migration -seq name
 $ make -f Makefile
 ```
 
-**4.** Running Development
+**4.** Run below command to run app server
 ```shell
 $ go run main.go
 ```
