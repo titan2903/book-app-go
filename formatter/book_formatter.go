@@ -7,7 +7,7 @@ type BookFormatter struct {
 	UserID int `json:"user_id"`
 	Name string `json:"name"`
 	Genre string `json:"genre"`
-	Release int64 `json:"release"`
+	Release int `json:"release"`
 	IsRead bool `json:"is_read"`
 }
 

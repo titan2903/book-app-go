@@ -72,6 +72,7 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 
 func(h *bookHandler) GetBooks(c *gin.Context) {
 	genre := c.Query("genre")
+	isRead := c.Query("is_read")
 	startYear, _ := strconv.Atoi(c.Query("start_year"))
 	endYear, _ := strconv.Atoi(c.Query("end_year"))
 	userID, _ := strconv.Atoi(c.Query("user_id"))
@@ -83,11 +84,15 @@ func(h *bookHandler) GetBooks(c *gin.Context) {
 	
 	filterBook := transport.FilterBook{}
 	filterBook.Genre = genre
+	filterBook.IsRead = isRead
 	filterBook.StartYear = startYear
 	filterBook.EndYear = endYear
+	fmt.Println("start year", startYear)
+	fmt.Println("end year", endYear)
 
 	books, count, err := h.service.GetBooks(userID, filterBook, limit, page)
 	if err != nil {
+		fmt.Println(err.Error())
 		response := transport.ApiResponse("Error to get books", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return

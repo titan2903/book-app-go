@@ -27,7 +27,7 @@ func NewService() *jwtService { //! bisa memanggil generate token dari package m
 func(s *jwtService) GenerateToken(userID int) (string, error) {
 	payload := jwt.MapClaims{}
 	payload["user_id"] = userID //! data yang ingin di masukkan ke token
-	payload["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	payload["exp"] = time.Now().Add(time.Minute * 120).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload) //! generate token
 

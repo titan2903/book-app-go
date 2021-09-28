@@ -3,7 +3,8 @@ package repository
 import (
 	"book-app/entity"
 	"book-app/transport"
-	"errors"
+	"fmt"
+	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -38,6 +39,8 @@ func (r *repositoryBook) FindAll(userID int, filterBook transport.FilterBook, li
 
 	var count int64
 
+	isRead, _ := strconv.ParseBool(filterBook.IsRead)
+
 	offset := (page - 1) * limit
 
 	query := r.db.Table("books").Count(&count)
@@ -50,8 +53,14 @@ func (r *repositoryBook) FindAll(userID int, filterBook transport.FilterBook, li
 		query = query.Where("genre LIKE ?", "%"+filterBook.Genre+"%")
 	}
 
-	if filterBook.StartYear != 0 && filterBook.EndYear != 0 {
-		query = query
+	fmt.Println(filterBook.StartYear)
+
+	if filterBook.StartYear != 0 {
+		query = query.Where("genre = ? AND release > ?", filterBook.Genre, filterBook.StartYear)
+	}
+
+	if filterBook.IsRead != "" {
+		query = query.Where("is_read = ?", isRead)
 	}
 
 	query = query.Count(&count).Find(&books)
@@ -59,7 +68,7 @@ func (r *repositoryBook) FindAll(userID int, filterBook transport.FilterBook, li
 	query = query.Limit(limit).Offset(offset).Find(&books)
 
 	if query.Error != nil {
-		return nil, 0, errors.New("Error Get Books from Database")
+		return nil, 0, query.Error
 	}
 
 	return books, count, nil

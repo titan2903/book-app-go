@@ -7,7 +7,7 @@ type Book struct {
 	UserID 			int
 	Name 			string
 	Genre 			string
-	Release        	int64
+	Release        	int
 	IsRead			bool
 	CreatedAt      	time.Time
 	UpdatedAt	   	time.Time

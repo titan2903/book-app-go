@@ -36,14 +36,14 @@ type FormUpdateUserInput struct {
 type InputDataBook struct {
 	Name string `json:"name" binding:"required"`
 	Genre string `json:"genre"`
-	Release int64 `json:"release"`
+	Release int `json:"release"`
 	User entity.User
 }
 
 type InputDataBookUpdate struct {
 	Name string `json:"name"`
 	Genre string `json:"genre"`
-	Release int64 `json:"release"`
+	Release int `json:"release"`
 	IsRead bool `json:"is_read"`
 	User entity.User
 }
@@ -57,4 +57,5 @@ type FilterBook struct {
 	StartYear int `query:"start_year"`
 	EndYear int `query:"end_year"`
 	Genre string `query:"genre"`
+	IsRead string `query:"is_read"`
 }
