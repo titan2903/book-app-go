@@ -3,10 +3,10 @@ CREATE TABLE IF NOT EXISTS `books` (
     `user_id` int UNSIGNED,
     `name` varchar(150),
     `genre` varchar(150),
-    `release` int,
+    `release` TIMESTAMP DEFAULT NULL,
     `is_read` boolean,
-    `created_at` datetime DEFAULT NULL,
-    `updated_at` datetime DEFAULT NULL,
+    `created_at` TIMESTAMP DEFAULT NULL,
+    `updated_at` TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 );
