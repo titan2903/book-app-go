@@ -6,7 +6,6 @@ import (
 	"book-app/formatter"
 	"book-app/service"
 	"book-app/transport"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +27,6 @@ func(h *userHandler) RegisterUser(c *gin.Context) {
 
 	if err != nil {
 		errors := transport.FormatValidationError(err)
-		fmt.Println("masuk1")
 		errorMessage := gin.H{"errors": errors}
 		response := transport.ApiResponse("Register account failed", http.StatusBadRequest, "error", errorMessage) //! entity tidak bisa di proses 
 
@@ -56,7 +54,6 @@ func(h *userHandler) RegisterUser(c *gin.Context) {
 
 	newUser, _ := h.userService.RegisterUser(input)
 	if err != nil {
-		fmt.Println("masuk2")
 		response := transport.ApiResponse("Register account failed", http.StatusBadRequest, "error", nil) //! Invalid input
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -64,7 +61,6 @@ func(h *userHandler) RegisterUser(c *gin.Context) {
 
 	token, err := h.authService.GenerateToken(newUser.ID)
 	if err != nil {
-		fmt.Println("masuk3")
 		response := transport.ApiResponse("Register account failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return

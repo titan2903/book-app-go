@@ -5,7 +5,6 @@ import (
 	"book-app/repository"
 	"book-app/transport"
 	"errors"
-	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -29,10 +28,8 @@ func NewServiceUser(repository repository.RepositoryUser) *serviceUser {
 }
 
 func(s *serviceUser) RegisterUser(input transport.RegisterUserInput) (entity.User, error) {
-	fmt.Printf("Username user: %s",input.Username)
 	userData, _ := s.repository.FindByUsername(input.Username)
 
-	fmt.Printf("User data: %+v",userData)
 	if userData.ID != 0 { //! jika ada user yang menggunakan username yang sama
 		return userData, errors.New("Username has been taken")
 	}
