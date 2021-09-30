@@ -1,6 +1,9 @@
 package transport
 
-import "book-app/entity"
+import (
+	"book-app/entity"
+	"time"
+)
 
 //! struct yang digunakan untuk mapping dari inputan user
 type RegisterUserInput struct { 
@@ -36,14 +39,14 @@ type FormUpdateUserInput struct {
 type InputDataBook struct {
 	Name string `json:"name" binding:"required"`
 	Genre string `json:"genre"`
-	Release int `json:"release"`
+	Release time.Time `json:"release"`
 	User entity.User
 }
 
 type InputDataBookUpdate struct {
 	Name string `json:"name"`
 	Genre string `json:"genre"`
-	Release int `json:"release"`
+	Release time.Time `json:"release"`
 	IsRead bool `json:"is_read"`
 	User entity.User
 }
@@ -54,8 +57,8 @@ type InputDetailIdBook struct {
 }
 
 type FilterBook struct {
-	StartYear int `query:"start_year"`
-	EndYear int `query:"end_year"`
+	UserID int `query:"user_id"`
+	Release string `query:"release"`
 	Genre string `query:"genre"`
 	IsRead string `query:"is_read"`
 }

@@ -52,7 +52,6 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 
 	convertIdBook, err := strconv.Atoi(idBook)
 	if err != nil {
-		fmt.Println("masuk1")
 		response := transport.ApiResponse("Failed to get detail book", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return;
@@ -60,7 +59,6 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 
 	bookDetail, err := h.service.FindByID(convertIdBook)
 	if err != nil {
-		fmt.Println("masuk2")
 		response := transport.ApiResponse("Failed to get detail book", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return;
@@ -71,10 +69,10 @@ func(h *bookHandler) GetBook(c *gin.Context) {
 }
 
 func(h *bookHandler) GetBooks(c *gin.Context) {
+
 	genre := c.Query("genre")
 	isRead := c.Query("is_read")
-	startYear, _ := strconv.Atoi(c.Query("start_year"))
-	endYear, _ := strconv.Atoi(c.Query("end_year"))
+	release := c.Query("release")
 	userID, _ := strconv.Atoi(c.Query("user_id"))
 	limitQuery := c.DefaultQuery("limit", config.DefaultLimit)
 	pageQuery := c.DefaultQuery("page", config.DefaultPage)
@@ -85,20 +83,17 @@ func(h *bookHandler) GetBooks(c *gin.Context) {
 	filterBook := transport.FilterBook{}
 	filterBook.Genre = genre
 	filterBook.IsRead = isRead
-	filterBook.StartYear = startYear
-	filterBook.EndYear = endYear
-	fmt.Println("start year", startYear)
-	fmt.Println("end year", endYear)
+	filterBook.UserID = userID
+	filterBook.Release = release
+	
 
-	books, count, err := h.service.GetBooks(userID, filterBook, limit, page)
+	books, count, err := h.service.GetBooks(filterBook, limit, page)
 	if err != nil {
 		fmt.Println(err.Error())
-		response := transport.ApiResponse("Error to get books", http.StatusBadRequest, "error", nil)
+		response := transport.ApiResponse(err.Error(), http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
-	fmt.Println(count)
 
 	response := transport.ApiResponseGetListBook("List of books", http.StatusOK, "success", formatter.FormatBooks(books), count)
 	
@@ -144,7 +139,6 @@ func(h *bookHandler) DeleteBook(c *gin.Context) {
 
 	err := c.ShouldBindUri(&inputID)
 	if err != nil {
-		fmt.Println("masuk1")
 		response := transport.ApiResponse("Failed to Delete book", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return;
@@ -157,7 +151,6 @@ func(h *bookHandler) DeleteBook(c *gin.Context) {
 
 	_, err = h.service.DeleteBook(inputID, inputData)
 	if err != nil {
-		fmt.Println("masuk3")
 		response := transport.ApiResponse("Failed Delete book", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return;

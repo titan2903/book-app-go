@@ -9,7 +9,7 @@ import (
 
 type ServiceBook interface {
 	AddBook(input transport.InputDataBook) (entity.Book, error)
-	GetBooks(UserID int, filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error)
+	GetBooks(filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error)
 	FindByID(input int) (entity.Book, error)
 	UpdateBook(inputID transport.InputDetailIdBook, inputData transport.InputDataBookUpdate) (entity.Book, error)
 	DeleteBook(inputID transport.InputDetailIdBook, inputData transport.InputDetailIdBook) (entity.Book, error)
@@ -39,9 +39,8 @@ func(s *serviceBook) AddBook(input transport.InputDataBook) (entity.Book, error)
 	return newBook, nil
 }
 
-func(s *serviceBook) GetBooks(UserID int, filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error) {
-
-	books, count, err := s.repository.FindAll(UserID, filterBook, limit, page)
+func(s *serviceBook) GetBooks(filterBook transport.FilterBook, limit, page int) ([]entity.Book, int64, error) {
+	books, count, err := s.repository.FindAll(filterBook, limit, page)
 	if err != nil {
 		return books, 0, err
 	}
@@ -77,7 +76,7 @@ func(s *serviceBook) UpdateBook(inputID transport.InputDetailIdBook, inputData t
 		book.Genre = inputData.Genre
 	}
 
-	if inputData.Release != 0 {
+	if inputData.Release.String() != "" {
 		book.Release = inputData.Release
 	}
 

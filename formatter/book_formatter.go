@@ -1,13 +1,16 @@
 package formatter
 
-import "book-app/entity"
+import (
+	"book-app/entity"
+	"time"
+)
 
 type BookFormatter struct {
 	ID int `json:"id"`
 	UserID int `json:"user_id"`
 	Name string `json:"name"`
 	Genre string `json:"genre"`
-	Release int `json:"release"`
+	Release time.Time `json:"release"`
 	IsRead bool `json:"is_read"`
 }
 
